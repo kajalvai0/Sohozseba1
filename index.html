@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>সহজসেবা | বদলগাছি নওগাঁর জন্য অনলাইন সেবা</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    :root {
+      --primary: #27ae60;
+      --primary-dark: #219653;
+      --secondary: #2ecc71;
+      --accent: #f1c40f;
+      --light: #f9f9f9;
+      --dark: #333;
+      --gray: #777;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --error: #e74c3c;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .logo i {
+      font-size: 2rem;
+      color: var(--accent);
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    
+    header p {
+      font-size: 1.1rem;
+      max-width: 600px;
+    }
+    
+    /* Navigation */
+    nav {
+      background-color: white;
+      padding: 0.8rem 1rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 82px;
+      z-index: 99;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .quick-links {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .quick-link {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    .quick-link:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 1rem auto;
+      padding: 0 1rem;
+    }
+    
+    .location-section, .search-section {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1.5rem;
+    }
+    
+    .location-section h2, .search-section h2 {
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+    }
+    
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    
+    .input-container {
+      flex: 1;
+      min-width: 250px;
+      max-width: 450px;
+    }
+    
+    .input-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+    
+    input[type="text"], select, input[type="tel"], input[type="email"], textarea {
+      padding: 0.8rem 1rem;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    input[type="text"]:focus, select:focus, input[type="tel"]:focus, input[type="email"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+    }
+    
+    .search-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .search-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Services Section */
+    .services-section {
+      margin-top: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-title {
+      color: var(--primary-dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .category-filter {
+      display: flex;
+      gap: 0.8rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+    }
+    
+    .category-btn {
+      background-color: #e8f5e9;
+      color: var(--primary-dark);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    
+    .category-btn.active, .category-btn:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .service-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+    
+    .card h3 {
+      margin: 0.5rem 0;
+      color: var(--primary-dark);
+      font-size: 1.2rem;
+    }
+    
+    .service-desc {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+    
+    .rating {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+      width: 100%;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 1rem;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-call {
+      background: #e74c3c;
+    }
+    
+    .btn-call:hover {
+      background: #c0392b;
+    }
+    
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1.5rem;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-header h2 {
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 1rem;
+    }
+    
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .submit-btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .success-message {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      text-align: center;
+      display: none;
+    }
+    
+    .error-message {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #1a3c2a 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    
+    .footer-column h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background-color: var(--accent);
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+    
+    .footer-links a {
+      color: #e0e0e0;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .footer-links a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    
+    .social-link:hover {
+      background-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #b0bec5;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .quick-links {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .input-container {
+        width: 100%;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .category-filter {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .logo h1 {
+        font-size: 1.5rem;
+      }
+      
+      header p {
+        font-size: 1rem;
+      }
+      
+      .quick-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      
+      .services {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <h1>সহজসেবা</h1>
+      </div>
+      <p>বদলগাছি, নওগাঁর জন্য সহজ অনলাইন সেবা</p>
+    </div>
+  </header>
+  
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <div class="quick-links">
+        <a href="#services" class="quick-link">
+          <i class="fas fa-bolt"></i> জরুরি সেবা
+        </a>
+        <a href="#booking" class="quick-link">
+          <i class="fas fa-calendar-check"></i> সেবা বুকিং
+        </a>
+        <a href="#contact" class="quick-link">
+          <i class="fas fa-headset"></i> সাহায্য চাই
+        </a>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <main>
+    <!-- Location Section -->
+    <section class="location-section">
+      <h2><i class="fas fa-map-marker-alt"></i> আপনার এলাকা নির্বাচন করুন</h2>
+      <div class="input-group">
+        <div class="input-container">
+          <label for="location">📍 আপনার ইউনিয়ন/গ্রাম:</label>
+          <select id="location">
+            <option value="">সব এলাকা</option>
+            <option>বদলগাছি সদর</option>
+            <option>আধাইপুর</option>
+            <option>নিশিপুর</option>
+            <option>মিঠাপুর</option>
+            <option>বালুভরা</option>
+            <option>পাহাড়পুর</option>
+          </select>
+        </div>
+        
+        <div class="input-container">
+          <label for="village">📍 আপনার গ্রাম/মহল্লা:</label>
+          <input type="text" id="village" placeholder="আপনার গ্রামের নাম লিখুন...">
+        </div>
+      </div>
+    </section>
+    
+    <!-- Search Section -->
+    <section class="search-section">
+      <h2><i class="fas fa-search"></i> সেবা খুঁজুন</h2>
+      <div class="input-group">
+        <div class="input-container">
+          <input type="text" id="service-search" placeholder="আপনার প্রয়োজনীয় সেবা লিখুন...">
+        </div>
+        <button class="search-btn" id="search-btn">
+          <i class="fas fa-search"></i> সেবা খুঁজুন
+        </button>
+      </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-concierge-bell"></i> জনপ্রিয় সেবাসমূহ</h2>
+        <div class="category-filter">
+          <button class="category-btn active" data-category="all">সকল সেবা</button>
+          <button class="category-btn" data-category="home">ঘরোয়া সেবা</button>
+          <button class="category-btn" data-category="health">স্বাস্থ্য সেবা</button>
+          <button class="category-btn" data-category="transport">পরিবহন</button>
+          <button class="category-btn" data-category="education">শিক্ষা</button>
+          <button class="category-btn" data-category="emergency">জরুরি</button>
+        </div>
+      </div>
+      
+      <div class="services" id="services-container">
+        <!-- Services will be loaded dynamically from Google Sheets -->
+        <div class="loading-spinner"></div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Booking Modal -->
+  <div class="modal" id="booking-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-calendar-check"></i> <span id="modal-service-name">সেবা বুকিং</span></h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="booking-form">
+          <input type="hidden" id="service-id">
+          <input type="hidden" id="service-name">
+          
+          <div class="form-group">
+            <label for="customer-name">আপনার নাম <span class="required">*</span></label>
+            <input type="text" id="customer-name" placeholder="আপনার পূর্ণ নাম লিখুন" required>
+            <div class="error-message" id="name-error">নাম অবশ্যই প্রয়োজন</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="customer-phone">মোবাইল নম্বর <span class="required">*</span></label>
+            <input type="tel" id="customer-phone" placeholder="01XXXXXXXXX" required>
+            <div class="error-message" id="phone-error">সঠিক মোবাইল নম্বর দিন</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="customer-email">ইমেইল (ঐচ্ছিক)</label>
+            <input type="email" id="customer-email" placeholder="আপনার ইমেইল ঠিকানা">
+          </div>
+          
+          <div class="form-group">
+            <label for="customer-address">ঠিকানা <span class="required">*</span></label>
+            <textarea id="customer-address" rows="3" placeholder="আপনার সম্পূর্ণ ঠিকানা লিখুন" required></textarea>
+            <div class="error-message" id="address-error">ঠিকানা অবশ্যই প্রয়োজন</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="booking-date">পছন্দের তারিখ</label>
+            <input type="date" id="booking-date">
+          </div>
+          
+          <div class="form-group">
+            <label for="booking-time">পছন্দের সময়</label>
+            <select id="booking-time">
+              <option value="">সময় নির্বাচন করুন</option>
+              <option>সকাল ৯টা - ১১টা</option>
+              <option>বিকাল ৩টা - ৫টা</option>
+              <option>সন্ধ্যা ৬টা - ৮টা</option>
+              <option>অন্যান্য সময়</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> বুকিং নিশ্চিত করুন
+          </button>
+          
+          <div class="success-message" id="success-message">
+            <i class="fas fa-check-circle"></i> আপনার বুকিং সফলভাবে জমা হয়েছে! শীঘ্রই আমাদের প্রতিনিধি আপনার সাথে যোগাযোগ করবেন।
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>সহজসেবা</h3>
+        <p>বদলগাছি, নওগাঁর মানুষের দোরগোড়ায় সেবা পৌঁছে দেয়ার লক্ষ্যে আমরা কাজ করছি। আমাদের সাথে যুক্ত হোন এবং সেবা নিন সহজে।</p>
+        <div class="social-links">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class=
